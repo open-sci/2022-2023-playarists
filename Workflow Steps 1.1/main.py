@@ -36,7 +36,7 @@ def main():
     # Create a dictionary to store the results
     results_dict = {filename: result for filename, result in all_results}
 
-    print("eat it!")
+    print("expected output for part 1.1:")
     print(results_dict[next(iter(results_dict))].head(1))
 
 if __name__ == '__main__':
