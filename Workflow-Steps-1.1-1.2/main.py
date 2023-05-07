@@ -5,6 +5,7 @@ import concurrent.futures
 from tqdm import tqdm
 from utils import detect_delimiter
 from process import process_file, process_file_wrapper
+from doaj_processing import process_doaj_file
 
 def main():
     delimiter = detect_delimiter('ERIHPLUSapprovedJournals.csv')
@@ -35,9 +36,18 @@ def main():
 
     # Create a dictionary to store the results
     results_dict = {filename: result for filename, result in all_results}
-
+    
     print("expected output for part 1.1:")
     print(results_dict[next(iter(results_dict))].head(1))
+
+    # Combine the results from all batches into a single DataFrame
+    final_df = pd.concat(list(results_dict.values()), ignore_index=True)
+
+    # Process the DOAJ file and merge the Open Access information
+    final_df = process_doaj_file(final_df)
+
+    print("expected output for part 1.2:")
+    print(final_df.head(1))
 
 if __name__ == '__main__':
     main()
