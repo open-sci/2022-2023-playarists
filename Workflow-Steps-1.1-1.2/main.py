@@ -1,3 +1,4 @@
+import argparse
 import os
 import pandas as pd
 import glob
@@ -7,28 +8,46 @@ from utils import detect_delimiter
 from process import process_file, process_file_wrapper
 from doaj_processing import process_doaj_file
 
+
+class CSV_to_DataFrame(object):
+    def __init__(self, path):
+        self.path = path
+        self.delimiter = detect_delimiter(path)
+        self.dataframe = pd.read_csv(path, delimiter=self.delimiter)
+        self.erih_dict = self.get_erih_plus_dict()
+
+    def get_erih_plus_dict(self):
+        df = self.dataframe
+        erih_plus_dict = {}
+        for idx, row in df.iterrows():
+            erih_plus_dict[row["Print ISSN"]] = row["Journal ID"]
+            erih_plus_dict[row["Online ISSN"]] = row["Journal ID"]
+        return erih_plus_dict
+
 def main():
-    delimiter = detect_delimiter('ERIHPLUSapprovedJournals.csv')
-    erih_plus_df = pd.read_csv('ERIHPLUSapprovedJournals.csv', sep=delimiter)
-
-    input_directory = "csv_dump"
+    # Parameters
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--batch_size", default=100, type=int, required=False, help="batch size: e.g. 100")
+    parser.add_argument("--max_workers", default=8, type=int, required=False, help="max_workers: e.g. 4")
+    parser.add_argument("--erih_plus", default="ERIHPLUSapprovedJournals.csv", type=str, required=False, help="path to the ERIH PLUS dataset")
+    args = parser.parse_args()
+    
+    input_directory = "dumps"
     files = glob.glob(os.path.join(input_directory, "*.csv"))
-
-    # Number of files to process at once
-    batch_size = 150
-
     all_results = []
+
+    erih_dict = CSV_to_DataFrame(args.erih_plus).get_erih_plus_dict()
 
     # Initialize a progress bar to visualize the progress of processing batches of files
     with tqdm(total=len(files), desc="Batches") as pbar:
         # Process files in batches
-        for i in range(0, len(files), batch_size):
+        for i in range(0, len(files), args.batch_size):
             # Get the current batch of files
-            batch_files = files[i:i + batch_size]
+            batch_files = files[i:i + args.batch_size]
 
             # Process the current batch of files using a ProcessPoolExecutor for parallelism
-            with concurrent.futures.ProcessPoolExecutor(max_workers=4) as executor:
-                results = executor.map(process_file_wrapper, [(f, erih_plus_df) for f in batch_files])
+            with concurrent.futures.ProcessPoolExecutor(max_workers=args.max_workers) as executor:
+                results = executor.map(process_file_wrapper, [(f, erih_dict) for f in batch_files])
                 all_results.extend(results)
             # Update the progress bar for each batch
             pbar.update(len(batch_files))
@@ -41,7 +60,7 @@ def main():
     print(final_df)
 
     # Process the DOAJ file and merge the Open Access information
-    final_df = process_doaj_file(final_df)
+    #final_df = process_doaj_file(final_df)
     print("expected output for part 1.2:")
     print(final_df)
     final_df.to_csv('resultDf.csv', index=False)
