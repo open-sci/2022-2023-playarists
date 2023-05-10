@@ -51,7 +51,7 @@ def main():
     print("Unique OC_ISSN and Publication_in_venue based on this method in doaj_processing.py: merged_data.groupby('EP_ID')['EP_ID'].transform('count')")
     print(unique_ISSN_df)
     
-    unique_ISSN_df.to_csv('unique_ISSN_df', index=False)
+    unique_ISSN_df.to_csv('unique_ISSN_df.csv', index=False)
     final_df.to_csv('resultDf.csv', index=False)
 
 if __name__ == '__main__':
