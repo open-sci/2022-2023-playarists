@@ -27,7 +27,7 @@ class CSV_to_DataFrame(object):
 def main():
     # Parameters
     parser = argparse.ArgumentParser()
-    parser.add_argument("--batch_size", default=100, type=int, required=False, help="batch size: e.g. 100")
+    parser.add_argument("--batch_size", default=150, type=int, required=False, help="batch size: e.g. 100")
     parser.add_argument("--max_workers", default=8, type=int, required=False, help="max_workers: e.g. 4")
     parser.add_argument("--erih_plus", default="ERIHPLUSapprovedJournals.csv", type=str, required=False, help="path to the ERIH PLUS dataset")
     args = parser.parse_args()
@@ -57,6 +57,7 @@ def main():
     print("expected output for part 1.1:")
     # Combine the results from all batches into a single DataFrame
     final_df = pd.concat(list(results_dict.values()), ignore_index=True)
+    final_df = final_df.groupby(['OC_omid', 'issn', 'EP_id']).agg({'Publications_in_venue': 'sum'}).reset_index()
     print(final_df)
 
     # Process the DOAJ file and merge the Open Access information
