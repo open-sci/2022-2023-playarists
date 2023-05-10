@@ -12,7 +12,7 @@ def main():
     erih_plus_df = pd.read_csv('ERIHPLUSapprovedJournals.csv', sep=delimiter)
 
     #input_directory = "csv_dump"
-    input_directory="I:\open-sci\dump-files\opencitations-meta\partial_dump"
+    input_directory="D:\open-sci\dump-files\opencitations-meta\partial_dump"
     files = glob.glob(os.path.join(input_directory, "*.csv"))
 
     # Number of files to process at once
@@ -28,7 +28,7 @@ def main():
             batch_files = files[i:i + batch_size]
 
             # Process the current batch of files using a ProcessPoolExecutor for parallelism
-            with concurrent.futures.ProcessPoolExecutor(max_workers=4) as executor:
+            with concurrent.futures.ProcessPoolExecutor(max_workers=8) as executor:
                 results = executor.map(process_file_wrapper, [(f, erih_plus_df) for f in batch_files])
                 all_results.extend(results)
             # Update the progress bar for each batch
@@ -49,15 +49,11 @@ def main():
     final_df['Open Access'] = final_df['Open Access'].apply(set)
     final_df['Open Access'] = final_df['Open Access'].apply(list)
     
-    print("expected output for part 1.3 based on  using agg({'OC_ISSN': list...}) and groupby().agg():")
+    print("expected output for part 1.3 based on groupby().agg():")
     
     print(final_df)
     
-    # Print the unique_ISSN_df
-    #print("Unique OC_ISSN and Publication_in_venue based on exploding the OC_ISSN column(i.e. transforming each list in the column into a separate row), and then dropping duplicates: ")
-    #print(unique_ISSN_df)
-    
-    #unique_ISSN_df.to_csv('unique_ISSN_df.csv', index=False)
+
     final_df.to_csv('resultDf_ocissn_lst.csv', index=False)
 
 if __name__ == '__main__':
