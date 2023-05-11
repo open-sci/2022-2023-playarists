@@ -35,4 +35,40 @@ def process_doaj_file(merged_data, doaj_file_path):
     merged_data = merged_data[['OC_OMID', 'OC_ISSN', 'EP_ID', 'Publication_in_venue', 'Open Access']]
 
 
-    return merged_data     
+    return merged_data      # removed , unique_ISSN_df
+
+
+def process_doaj_file_0(merged_data, doaj_file_path):
+    # Load DOAJ CSV file into a DataFrame
+    doaj_df = pd.read_csv(doaj_file_path, encoding="UTF-8")
+
+    new_doaj = doaj_df.iloc[1:, [5, 6, 10]]
+
+    # Create a dictionary of Open Access ISSNs
+    open_access_dict = {}
+    for index, row in new_doaj.iterrows():
+        open_access_dict[row['Journal ISSN (print version)']] = True
+        open_access_dict[row['Journal EISSN (online version)']] = True
+
+    # Merge Open Access information with the main dataframe
+    merged_data['Open Access'] = merged_data['OC_ISSN'].apply(lambda x: map_issn_list_to_open_access(x, open_access_dict))
+   
+    # calculate 'Publication_in_venue' as the length of the list (counting duplicates)
+    merged_data['Publication_in_venue'] = merged_data['OC_ISSN'].apply(len)
+
+    # convert 'OC_ISSN' lists to sets to remove duplicates
+    merged_data['OC_ISSN'] = merged_data['OC_ISSN'].apply(set)
+    
+    #merged_data['OC_ISSN'] = merged_data['OC_ISSN'].apply(list)
+    #merged_data['Open Access'] = merged_data['Open Access'].apply(set)
+    #merged_data['Open Access'] = merged_data['Open Access'].apply(list)
+
+    # Create another DataFrame with unique 'OC_ISSN' and 'Publication_in_venue' columns
+    #unique_ISSN_df = merged_data.explode('OC_ISSN')[['OC_ISSN', 'Publication_in_venue']].drop_duplicates()
+
+    # Keep only the required columns in the output
+    merged_data = merged_data[['OC_OMID', 'OC_ISSN', 'EP_ID', 'EP_ISSN', 'Publication_in_venue', 'Open Access']]
+    
+    #return merged_data, unique_ISSN_df
+    return merged_data
+
