@@ -15,10 +15,14 @@ class DOAJProcessor:
         for index, row in new_doaj.iterrows():
             open_access_dict[row['Journal ISSN (print version)']] = True
             open_access_dict[row['Journal EISSN (online version)']] = True
+        
+        open_access_keys = list(open_access_dict.keys())
 
-        # Merge Open Access information with the main dataframe
-        merged_data['Open Access'] = merged_data['issn'].map(open_access_dict)
-        # Fill missing Open Access information with 'Unknown'
-        merged_data['Open Access'] = merged_data['Open Access'].fillna('Unknown')
+        merged_data['Open Access'] = "Uknown"
+        for idx, row in merged_data["issn"].items():
+            for el in row[1:-1].split(", "):
+                el = el.replace("'", "")
+                if el in open_access_keys:
+                    merged_data.at[idx, 'Open Access'] = True
 
         return merged_data

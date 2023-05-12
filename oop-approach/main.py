@@ -44,21 +44,19 @@ class PlayaristProcessor:
         return erih_plus_dict
 
     def run_workflow(self):
-        input_directory = "D:\open-sci\dump-files\opencitations-meta\partial_dump"
+        input_directory = "csv_dump"
         files = glob.glob(os.path.join(input_directory, "*.csv"))
 
         final_df = self.process_files(files)
 
-        doaj_processor = DOAJProcessor(self.doaj_file_path)
-
-        final_df = doaj_processor.process_doaj_file(final_df)
-
         print("Expected output for part 1.1:")
         print(final_df)
         print("Expected output for part 1.2:")
-        print(final_df)
+        doaj_processor = DOAJProcessor(self.doaj_file_path)
+        new_final_df = doaj_processor.process_doaj_file(final_df)
+        print(new_final_df)
 
-        final_df.to_csv('resultDf.csv', index=False)
+        new_final_df.to_csv('resultDf.csv', index=False)
 
 
 def main():
