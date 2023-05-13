@@ -3,12 +3,16 @@
 #3. What are disciplines providing the largest number of publications and journals? 
 import pandas as pd
 from pprint import pprint
+from retrieve_doaj_country import retrieve_doaj_country
 
 result_df = pd.read_csv("Workflow-Steps-1.1-1.2/resultDf.csv")
-erih_df = pd.read_csv("Workflow-Steps-1.1-1.2\ERIHPLUSapprovedJournals.csv", sep= ";")
+erih_df = pd.read_csv("Workflow-Steps-1.1-1.2/ERIHPLUSapprovedJournals.csv", sep= ";")
+merged_df = pd.merge(erih_df, result_df, left_on='Journal ID', right_on='EP_id')
+doaj_df = pd.read_csv("Workflow-Steps-1.1-1.2\journalcsv__doaj.csv")
+doaj_df = doaj_df[["Journal ISSN (print version)", "Journal EISSN (online version)", "Country of publisher"]]
 
 # step 2.2 and 2.3 of workflow
-def create_dict(disc_dict, countr_dict, df):
+def create_dict(disc_dict, countr_dict, df): #df is erih-plus but merged with resultDf
     empty_countries = []
     for idx, row in df.iterrows():
         
@@ -33,6 +37,8 @@ def create_dict(disc_dict, countr_dict, df):
         #countries. NEED TO UPDATE BECAUSE THERE ARE MULTIPLE COUNTRIES SOMETIMES
         if pd.isna(row["Country of Publication"]):
             empty_countries.append(row["Journal ID"])
+
+            # create subdataframe with only rows of unmerged data that are unmatched
             # WRITE A FUNCTION TO SEE IF EMPTY_COUNTRIES CAN BE FOUND IN DOAJ AND CALL IT 
             # for the moment I am saving in a list
             
@@ -41,13 +47,17 @@ def create_dict(disc_dict, countr_dict, df):
                 countr_dict[row["Country of Publication"]] = [row["Journal ID"]]
             else: 
                 countr_dict[row["Country of Publication"]].append(row["Journal ID"])
-        # WRITE A FUNCTION TO SEE IF EMPTY_COUNTRIES CAN BE FOUND IN DOAJ AND CALL IT
-                
-    return disc_dict, countr_dict, empty_countries 
+    #print(empty_countries)
+    #print("\n________________________")
+    #pprint(df)
+
+    doaj_country_dict = retrieve_doaj_country(empty_countries, df, doaj_df, countr_dict)
+
+    return disc_dict, doaj_country_dict, empty_countries 
 
 
 
-disc_dict, country_dict, empty_countries = create_dict({}, {}, erih_df)
+disc_dict, country_dict, empty_countries = create_dict({}, {}, merged_df)
 
 #print(len(countr_dict)) #114
 #print(len(empty_countries)) #121
@@ -59,11 +69,12 @@ def counts(result_df, country_dict, disc_dict):
     countries_count = pd.DataFrame(columns=['Country','Journal_count','Publication_count'])
 
     for key, value in disc_dict.items():
-        # venue_count = len(value) # 2125 venues for Interdisciplinary research in the Social Sciences
-
+        venue_count = len(value) # 1592 venues for Interdisciplinary research in the Social Sciences
+        #print(venue_count)
         venue_in_OCMeta_count =  result_df[result_df["EP_id"].isin(value)]
         venue_in_OCMeta_count.reset_index(drop=True, inplace=True)
         venue_per_disc = len(venue_in_OCMeta_count) # 1592
+        #print(venue_per_disc)
         pub_per_disc = venue_in_OCMeta_count['Publications_in_venue'].sum() #753265
         
         #create df row
