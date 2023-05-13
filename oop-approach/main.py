@@ -7,6 +7,7 @@ from csv_to_dataframe import CSV_to_DataFrame
 from process import ProcessMetaCSV
 from doaj_processing import DOAJProcessor
 import concurrent.futures
+from erih_plus_processing import ERIHPlusProcessor
 
 
 class PlayaristProcessor:
@@ -44,19 +45,29 @@ class PlayaristProcessor:
         return erih_plus_dict
 
     def run_workflow(self):
-        input_directory = "csv_dump"
+        input_directory = "D:\open-sci\dump-files\opencitations-meta\partial_dump"
         files = glob.glob(os.path.join(input_directory, "*.csv"))
 
         final_df = self.process_files(files)
 
-        print("Expected output for part 1.1:")
+        print("Expected output for part 1.1:\n")
         print(final_df)
-        print("Expected output for part 1.2:")
+        print("\nExpected output for part 1.2:\n")
         doaj_processor = DOAJProcessor(self.doaj_file_path)
         new_final_df = doaj_processor.process_doaj_file(final_df)
         print(new_final_df)
 
-        new_final_df.to_csv('resultDf.csv', index=False)
+        erih_plus_processor = ERIHPlusProcessor(self.erih_plus_path, self.doaj_file_path)
+
+        discipline_df = erih_plus_processor.process_disciplines()
+        country_df = erih_plus_processor.process_countries()
+
+        print("\nDisciplines with the highest number of publications:\n")
+        print(discipline_df)
+        print("\nCountries with the largest number of publications and journals:\n")
+        print(country_df)
+
+        final_df.to_csv('resultDf.csv', index=False)
 
 
 def main():
