@@ -50,9 +50,9 @@ class ProcessMetaCSV:
 
         return dataf
 
-    def process_file_wrapper(self, args):
+    def process_file_wrapper(self, args): #args potrebbe essere semplicemente input_file
         input_file = args
-        return input_file, self.process_file(input_file)
+        return input_file, self.process_file(input_file) #sono i batch_files
 
     def get_erih_plus_dict(self, path):
         csv_to_dataframe = CSV_to_DataFrame(path)

@@ -14,7 +14,7 @@ class CSV_to_DataFrame(object):
         self.path = path
         self.delimiter = detect_delimiter(path)
         self.dataframe = pd.read_csv(path, delimiter=self.delimiter)
-        self.erih_dict = self.get_erih_plus_dict()
+        #self.erih_dict = self.get_erih_plus_dict() #makes no sense to have this as an attribute when it is defined as a method
 
     def get_erih_plus_dict(self):
         df = self.dataframe
@@ -23,6 +23,10 @@ class CSV_to_DataFrame(object):
             erih_plus_dict[row["Print ISSN"]] = row["Journal ID"]
             erih_plus_dict[row["Online ISSN"]] = row["Journal ID"]
         return erih_plus_dict
+    
+erih_plus = CSV_to_DataFrame("Workflow-Steps-1.1-1.2\ERIHPLUSapprovedJournals.csv")
+
+print(erih_plus.get_erih_plus_dict())
 
 def main():
     # Parameters

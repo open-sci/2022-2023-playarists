@@ -15,7 +15,7 @@ class PlayaristProcessor:
         self.batch_size = batch_size
         self.max_workers = max_workers
         self.erih_plus_path = erih_plus_path
-        self.doaj_file_path = doaj_file_path
+        self.doaj_file_path = doaj_file_path 
 
     def process_files(self, files):
         erih_dict = self.get_erih_plus_dict(self.erih_plus_path)
@@ -57,6 +57,7 @@ class PlayaristProcessor:
         new_final_df = doaj_processor.process_doaj_file(final_df)
         print(new_final_df)
 
+        #part for disciplines and countries
         erih_plus_processor = ERIHPlusProcessor(self.erih_plus_path, self.doaj_file_path)
 
         discipline_df = erih_plus_processor.process_disciplines()
