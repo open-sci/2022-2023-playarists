@@ -1,6 +1,6 @@
 #answer to question 2 and 3 of research: 
 #2. What are the disciplines that have more publications?
-#3. What are disciplines providing the largest number of publications and journals? 
+#3. What are countries providing the largest number of publications and journals? 
 import pandas as pd
 from pprint import pprint
 from retrieve_doaj_country import retrieve_doaj_country
@@ -15,8 +15,8 @@ doaj_df = doaj_df[["Journal ISSN (print version)", "Journal EISSN (online versio
 def create_dict(disc_dict, countr_dict, df): #df is erih-plus but merged with resultDf
     empty_countries = []
     for idx, row in df.iterrows():
-        
-        #disciplines
+
+         #disciplines
         if len(disc_dict) == 0:
             disciplines = row["ERIH PLUS Disciplines"].split(', ')
             disc_dict= {key: [row["Journal ID"]] for key in disciplines}
@@ -33,7 +33,7 @@ def create_dict(disc_dict, countr_dict, df): #df is erih-plus but merged with re
                 disc_dict.update({key: [] for key in diff})            
                 for key in disciplines:
                     disc_dict[key].append(row["Journal ID"])
-            
+             
         #countries. NEED TO UPDATE BECAUSE THERE ARE MULTIPLE COUNTRIES SOMETIMES
         if pd.isna(row["Country of Publication"]):
             empty_countries.append(row["Journal ID"])
@@ -43,10 +43,22 @@ def create_dict(disc_dict, countr_dict, df): #df is erih-plus but merged with re
             # for the moment I am saving in a list
             
         else:
-            if row["Country of Publication"] not in countr_dict:
-                countr_dict[row["Country of Publication"]] = [row["Journal ID"]]
+            if len(countr_dict) == 0:
+                countries = row["Country of Publication"].split(', ')
+                countr_dict= {key: [row["Journal ID"]] for key in countries}
+
             else: 
-                countr_dict[row["Country of Publication"]].append(row["Journal ID"])
+                countries = set(row["Country of Publication"].split(', '))
+                keys = set(countr_dict.keys())
+                diff = countries - keys
+
+                if len(diff) == 0:
+                    for key in countries:
+                        countr_dict[key].append(row["Journal ID"])
+                else:
+                    countr_dict.update({key: [] for key in diff})            
+                    for key in countries:
+                        countr_dict[key].append(row["Journal ID"])
     #print(empty_countries)
     #print("\n________________________")
     #pprint(df)
@@ -107,5 +119,7 @@ disciplines_count, countries_count = counts(result_df, country_dict, disc_dict)
 #print("___________________________________________________")
 #pprint(countries_count)
 
-disciplines_count.to_csv('Workflow-Steps-2.1-2.2-3-4\disciplines_count.csv', index=False)
-countries_count.to_csv('Workflow-Steps-2.1-2.2-3-4\countries_count.csv', index=False)
+disciplines_count.to_csv('Workflow-Steps-2.1-2.2-3-4\disciplinesnew_count.csv', index=False)
+countries_count.to_csv('Workflow-Steps-2.1-2.2-3-4\countriesnew_count.csv', index=False)
+
+

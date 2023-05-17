@@ -33,9 +33,11 @@ def retrieve_doaj_country(unmatched_issn, result_df, doaj_df, countr_dict):
     #print(len(new_country)) #here 95 but shouldn't it be 92? before exloding the df there were 92 venues??
 
     #this was for us to retrieve venues id of unmatched venue-country
-    '''mask_na_countries =  pd.isna(new_country['Country'])
-    unmatched_df = new_country[mask_na_countries]''' 
-    #print(len(unmatched_df)) #44
+    mask_na_countries =  pd.isna(new_country['Country'])
+    unmatched_df = new_country[mask_na_countries]
+    unmatched_df = unmatched_df[['EP_id']]
+    print(unmatched_df)
+
     new_country = new_country.dropna(subset=['Country']).reset_index(drop=True) # len 51
 
     #extend country dict
@@ -57,6 +59,6 @@ def retrieve_doaj_country(unmatched_issn, result_df, doaj_df, countr_dict):
     del countr_dict['Republic of'] # Korea
                  
 
-    return countr_dict 
+    return countr_dict, unmatched_df
 
 

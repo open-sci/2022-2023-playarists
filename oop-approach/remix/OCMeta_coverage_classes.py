@@ -6,19 +6,8 @@ import concurrent.futures
 import functools
 from process1 import process_meta_csv, process_file_wrapper
 
+
 # ================= ERIH-PLUS CLASSES ================= #
-
-'''class ERIHPlusDataProcessor(object):
-    def __init__(self, erih_path : str): #put it here so it is inherited by subclass
-        self.erih_path = erih_path
-
-    def set_erih_path(self, new_path): #method to change path
-        self.erih_path = new_path
-        return True
-
-    def get_erih_path(self): #method to get path
-        return self.erih_path
-    '''
     
 class ERIHPlusProcessor(object):
     def __init__(self, erih_path : str): #erih_df is a ERIHPlusDataProcessor object
@@ -44,19 +33,8 @@ class ERIHPlusProcessor(object):
             erih_plus_dict[row["Online ISSN"]] = row["Journal ID"]
         return erih_plus_dict
     
+    
 # =================== DOAJ CLASSES ================= #
-
-'''class DOAJDataProcessor(object):
-    def __init__(self, doaj_path : str):
-        self.doaj_path = doaj_path
-
-    def set_doaj_path(self, new_path): #method to change path
-        self.doaj_path = new_path
-        return True
-
-    def get_doaj_path(self): #method to get path
-        return self.doaj_path
-    '''
 
 class DOAJProcessor(object):
     def __init__(self, doaj_path :str):
@@ -96,40 +74,8 @@ class DOAJProcessor(object):
         return merged_data
 
 
+
 # ============ META PROCESSOR CLASSES ============= #
-
-'''class PlayaristProcessor(object):
-    def __init__(self, batch_size, max_workers):
-        self.batch_size = batch_size
-        self.max_workers = max_workers
-
-    def set_batch_size(self, new_batch_size): #should we specify dtype?
-        self.batch_size = new_batch_size
-        return True
-    
-    def get_batch_size(self):
-        return self.batch_size
-    
-    def set_max_workers(self, new_max_workers):
-        self.max_workers = new_max_workers
-        return True
-    
-    def get_max_workers(self):
-        return self.max_workers
-
-class OCMetaDataProcessor(PlayaristProcessor) :
-    def __init__(self, batch_size, max_workers, meta_path : str):
-        self.meta_path = glob.glob(os.path.join(meta_path, "*.csv")) 
-    
-        super().__init__(batch_size, max_workers)
-    
-    def set_meta_path(self, new_path): #method to change path
-        self.meta_path = glob.glob(os.path.join(new_path, "*.csv"))
-        return True
-
-    def get_meta_path(self): #method to get path
-        return self.meta_path
-'''
 
 #this is the class that does everything basically 
 #only, instead of creating objects on the fly, I am trying to initialize them as class attrs                         
@@ -168,11 +114,7 @@ class OCMetaProcessor(object):
             for i in range(0, len(self.meta_path), self.batch_size):
                 batch_files = self.meta_path[i:i+self.batch_size]
                 with concurrent.futures.ProcessPoolExecutor(max_workers=self.max_workers) as executor:
-                    
-                    # Create a partial function with the desired additional argument
-                    #partial_process_file_wrapper = functools.partial(process_meta_csv.process_file_wrapper, erih_dict)
-                    #results = executor.map(partial_process_file_wrapper, batch_files)
-                    
+                                        
                     #I went back to how it was written in the first scripts
                     results = executor.map(process_file_wrapper, [(f, erih_dict) for f in batch_files])
                     all_results.extend(results)
