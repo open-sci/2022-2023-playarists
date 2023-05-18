@@ -110,6 +110,7 @@ class OCMetaProcessor(object):
 
     def process_files(self, erih_dict, doaj_df):
         all_results = []
+        totalOCMpublications = 0
         with tqdm(total=len(self.meta_path), desc="Batches") as pbar:
             for i in range(0, len(self.meta_path), self.batch_size):
                 batch_files = self.meta_path[i:i+self.batch_size]
@@ -121,15 +122,25 @@ class OCMetaProcessor(object):
                     
                 pbar.update(len(batch_files))
 
-        results_dict = {filename: result for filename, result in all_results}
+        results_dict = {}
+        for filename, result, publications_count in all_results:
+            results_dict[filename] = result
+            totalOCMpublications += publications_count
         #this is meta-erih merged
         final_df = pd.concat(list(results_dict.values()), ignore_index=True)
         final_df = final_df.groupby(['OC_omid', 'issn', 'EP_id']).agg({'Publications_in_venue': 'sum'}).reset_index()
 
         #this is meta-erih-doaj merged
         new_final_df = doaj_df.process_doaj_file(final_df)
-        
+
+        publications_coverage_count = new_final_df.shape[0]
+        OCMeta_coverage = publications_coverage_count / totalOCMpublications
+        OCMeta_coverage_percent = OCMeta_coverage * 100
+        print("##### OpenCitations Meta Coverage: count = ", str(totalOCMpublications), "; ratio = ", str(OCMeta_coverage), "; % = ", str(OCMeta_coverage_percent))
+
         return new_final_df   
-        #missing line of code where we export to csv (if we want)         
+        #missing line of code where we export to csv (if we want)
+
+
              
 
