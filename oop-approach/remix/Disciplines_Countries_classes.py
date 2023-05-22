@@ -3,21 +3,27 @@ from retrieve_doaj_country import retrieve_doaj_country
 
 # ==================== PROCESSORS FOR RETRIEVING DISCIPLINES ======================= #
 
-class DisciplinesCountriesProcessor(object):
-    def __init__(self, erih_df, meta_coverage):
-        self.merged_df = pd.merge(erih_df, meta_coverage, left_on='Journal ID', right_on='EP_id')
-        
+class ResultsProcessor(object):
+    def __init__(self, meta_coverage): # takes in input a PlayaristProcessor object
+        self.meta_coverage = meta_coverage.process_files()
+        self.erih_df = meta_coverage.get_erih_df()
+        self.doaj_df = meta_coverage.get_doaj_df()     
 
-class CountriesProcessor(DisciplinesCountriesProcessor):
-    def __init__(self, erih_df, meta_coverage, doaj_df):  
-        self.doaj_df = doaj_df[["Journal ISSN (print version)", "Journal EISSN (online version)", "Country of publisher"]] 
+
+class CountriesProcessor(ResultsProcessor):
+    def __init__(self, meta_coverage):  
+        self.doaj_df = self.doaj_df[["Journal ISSN (print version)", "Journal EISSN (online version)", "Country of publisher"]] 
         self.unmatched_countries = []
-        super().__init__(erih_df, meta_coverage)
+    
+
+        super().__init__(meta_coverage)
 
     def create_countries_dict(self):
         countr_dict = {}
+       
+        merged_df = pd.merge(self.erih_df, self.meta_coverage, left_on='Journal ID', right_on='EP_id')
 
-        for idx, row in self.merged_df.iterrows():
+        for idx, row in merged_df.iterrows():
             if pd.isna(row["Country of Publication"]):
                 self.unmatched_countries.append(row["Journal ID"])
 
@@ -43,14 +49,17 @@ class CountriesProcessor(DisciplinesCountriesProcessor):
         return complete_country_dict # a tuple con (countr_dict, unmatched_df)                
 
 
-class DisciplinesProcessor(DisciplinesCountriesProcessor):
-    def __init__(self, erih_df, meta_coverage):       
-        super().__init__(erih_df, meta_coverage)
+class DisciplinesProcessor(ResultsProcessor):
+    def __init__(self, meta_coverage):
+        super().__init__(meta_coverage)
+
 
     def create_disciplines_dict(self): 
         disc_dict = {}
 
-        for idx, row in self.merged_df.iterrows():
+        merged_df = pd.merge(self.erih_df, self.meta_coverage, left_on='Journal ID', right_on='EP_id')
+
+        for idx, row in merged_df.iterrows():
          #disciplines
             if len(disc_dict) == 0:
                 disciplines = row["ERIH PLUS Disciplines"].split(', ')
@@ -74,20 +83,21 @@ class DisciplinesProcessor(DisciplinesCountriesProcessor):
     
 # ================= COUNTS AND CSV EXPORT ====================== #
     
-class ResultsProcessor(object):
+class CountsProcessor(ResultsProcessor):
 
     def __init__(self, meta_coverage, export_path): #dir_path where to export csv
         self.export_path = export_path
-        self.meta_coverage = meta_coverage[["EP_id", "Publications_in_venue"]]
-
-   
-    def counts(self, dictionary, label): #dictionary is a DisciplinesCountriesProcessor object
         
+        super().__init__(meta_coverage)
+
+
+    def counts(self, dictionary, label): #dictionary is a DisciplinesCountriesProcessor object
+        meta_coverage = self.meta_coverage[["EP_id", "Publications_in_venue"]]
         count_df = pd.DataFrame(columns=[str(label),'Journal_count','Publication_count'])
     
         for key, value in dictionary.items():
          
-            venue_in_OCMeta_count =  self.meta_coverage[self.meta_coverage["EP_id"].isin(value)]
+            venue_in_OCMeta_count =  meta_coverage[meta_coverage["EP_id"].isin(value)]
             venue_in_OCMeta_count.reset_index(drop=True, inplace=True)
             venue_per_variable = len(venue_in_OCMeta_count) # 1592
             #print(venue_per_disc)
