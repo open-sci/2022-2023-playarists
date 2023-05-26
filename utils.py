@@ -38,7 +38,7 @@ def process_doaj_file(doaj_df, merged_data):  #this is called in oc metaprocesso
     
     open_access_keys = list(open_access_dict.keys())
 
-    merged_data['Open Access'] = "Uknown"
+    merged_data['Open Access'] = "Unknown"
     for idx, row in merged_data["issn"].items():
         for el in row[1:-1].split(", "):
             el = el.replace("'", "")
