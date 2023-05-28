@@ -9,7 +9,7 @@
  
  
  
-## how to run the software
+## How to run the software
  To reuse our program, please install the requirements.txt:
 ```sh
 pip install -r requirements.txt
@@ -18,7 +18,10 @@ pip install -r requirements.txt
 ```sh
 python run_workflow.py --batch_size number_batch_size --max_workers number__workers --oc_meta path_to_OC_Meta_folder --erih_plus path_to_erih_plus.csv --doaj path_to_doaj.csv
 ```
- All the parameters are already set to default values, however, users are strongly suggested to modify them depending on their system specifications (e.g.: --batch_size 100 --max_workers 4) and the names/locations of the downloaded datasets (--oc_meta, --erih_plus, --doaj) 
+ All the parameters are already set to default values, however, users are strongly suggested to modify them depending on their system specifications (e.g.: --batch_size 100 --max_workers 4) and the names/locations of the downloaded datasets (--oc_meta, --erih_plus, --doaj). In case users do not need to specify any parameter, the command is as follows:
+ ```sh
+python run_workflow.py
+```
 
  
  
