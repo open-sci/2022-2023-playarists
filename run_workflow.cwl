@@ -22,7 +22,7 @@ outputs:
   OCMeta_DOAJ_ErihPlus_merged:
     type: File
     outputBinding:
-      glob: "OCMeta_DOAJ_ErihPlus_merged.csv"
+      glob: "SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"
 
 stdout: result.txt
 
