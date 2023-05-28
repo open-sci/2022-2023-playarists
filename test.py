@@ -164,10 +164,6 @@ result_test_countries = pd.read_csv("countriesFake.csv").rename(columns={'Unname
 
 if result_countries.equals(result_test_countries):
     print("TEST2: Success ------> countries.csv is correct")
-else:
-    """ for idx, row in result_countries:
-        for el in ["Country"]:
-            if result_countries.at[idx, el] == result_countries.at[] """
 
 result_disciplines = pd.read_csv("disciplines.csv").sort_values("Discipline", ignore_index=True)
 result_test_disciplines = pd.read_csv("disciplinesFake.csv").rename(columns={'Unnamed: 0': 'Discipline'}).sort_values("Discipline", ignore_index=True)

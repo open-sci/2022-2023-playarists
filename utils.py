@@ -28,7 +28,7 @@ def get_erih_plus_dict(erih_df): #method to load dictionary
 
 def process_doaj_file(doaj_df, merged_data):  #this is called in oc metaprocessor
 
-    new_doaj = doaj_df.iloc[1:, [5, 6, 10]]
+    new_doaj = doaj_df.iloc[0:, [5, 6, 10]]
 
     # Create a dictionary of Open Access ISSNs
     open_access_dict = {}
