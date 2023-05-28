@@ -21,16 +21,7 @@ python run_workflow.py --batch_size number_batch_size --max_workers number__work
  All the parameters are already set to default values, however, users are strongly suggested to modify them depending on their system specifications (e.g.: --batch_size 100 --max_workers 4) and the names/locations of the downloaded datasets (--oc_meta, --erih_plus, --doaj). In case users do not need to specify any parameter, the command is as follows:
  ```sh
 python run_workflow.py
-```
-
- 
- 
- 
- 
- 
-
- 
- 
+``` 
  
  
  ## Naming convention of Datasets 
@@ -43,3 +34,7 @@ python run_workflow.py
 
 | Discipline | Journal_count | Publication_count | 
 |------------|---------------|-------------------|
+
+
+* <a href="https://ghasempouri1984-2022-2023-playarists-code-streamlit-app-1aspl5.streamlit.app/">streamlit visualization of results</a>
+

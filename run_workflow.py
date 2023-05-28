@@ -18,7 +18,7 @@ def main(args):
     countries = CountriesProcessor(meta_coverage)
     countries_dict = countries.create_countries_dict() 
     countries_dict, no_country_venues = countries_dict
-    result_countries = CountsProcessor(meta_coverage, "SSH_Publications_and_Journals_by_Country.csv")
+    result_countries = CountsProcessor(meta_coverage, "result/SSH_Publications_and_Journals_by_Country.csv")
     result_countries = result_countries.counts(countries_dict, "Country")
     print("##### These venues have no country specified", no_country_venues) 
 
@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     parser.add_argument("--batch_size", default=150, type=int, required=False, help="batch size: e.g. 100")
     parser.add_argument("--max_workers", default=4, type=int, required=False, help="max_workers: e.g. 4")
-    parser.add_argument("--oc_meta", default="csv_dump", type=str, required=False, help="path to the OpenCitations Meta dataset")
+    parser.add_argument("--oc_meta", default="F:\DATAvarie\csv\csv_dump", type=str, required=False, help="path to the OpenCitations Meta dataset")
     parser.add_argument("--erih_plus", default="ERIHPLUSapprovedJournals.csv", type=str, required=False, help="path to the ERIH PLUS dataset")
     parser.add_argument("--doaj", default="journalcsv__doaj.csv", type=str, required=False, help="path to the DOAJ file")
 
