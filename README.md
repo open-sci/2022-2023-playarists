@@ -10,7 +10,9 @@
  
  
 ## how to run the software
-
+ Users can run the program by cloning the repository and accessing it from shell. The command to launch the program is:
+'''python run_workflow.py --batch_size number_batch_size --max_workers number__workers --oc_meta path_to_OC_Meta_folder --erih_plus path_to_erih_plus.csv --doaj path_to_doaj.csv''' 
+ All the parameters are already set to default values, however, users are strongly suggested to modify them depending on their system specifications (e.g.: --batch_size 100 --max_workers 4) and the names/locations of downloaded datasets (--oc_meta, --erih_plus, --doaj) 
 
  
  
