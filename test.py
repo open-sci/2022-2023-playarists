@@ -1,3 +1,4 @@
+import sys
 import subprocess
 import pandas as pd
 import glob
@@ -150,7 +151,7 @@ def create_test_sets(length, start=0):
 # ---------------------------- LAUNCH THE TEST ------------------------- #
 
 create_test_sets(8, 0)
-subprocess.run(['python', python_file, '--oc_meta', 'fake_OC_Meta', "--erih_plus", "erih_test.csv", "--doaj", "doaj_test.csv"])
+subprocess.run([sys.executable, python_file, '--oc_meta', 'fake_OC_Meta', "--erih_plus", "erih_test.csv", "--doaj", "doaj_test.csv"])
 
 ## Check 
 results = pd.read_csv("OCMeta_DOAJ_ErihPlus_merged.csv").sort_values(by='Publications_in_venue', ignore_index=True).drop(["Unnamed: 0"], axis=1)
