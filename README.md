@@ -28,11 +28,7 @@ python run_workflow.py
  
  
  
- 
- 
- 
- 
- 
+
  
  
  
@@ -47,11 +43,3 @@ python run_workflow.py
 
 | Discipline | Journal_count | Publication_count | 
 |------------|---------------|-------------------|
-
-
-- run_workflow.py
-- utils.py
-- OCMeta_coverage_classes.py
-- Disciplines_Countries_classes.py
-- process
-- retrieve_doaj_country.py
