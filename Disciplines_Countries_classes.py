@@ -12,7 +12,7 @@ class ResultsProcessor(object):
 
 
 class CountriesProcessor(ResultsProcessor):
-    def __init__(self, meta_coverage, meta_coverage_processed_files="OCMeta_DOAJ_ErihPlus_merged.csv"): 
+    def __init__(self, meta_coverage, meta_coverage_processed_files="SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"): 
         super().__init__(meta_coverage, meta_coverage_processed_files)
         self.doaj_df = self.doaj_df[["Journal ISSN (print version)", "Journal EISSN (online version)", "Country of publisher"]] 
         self.unmatched_countries = []
@@ -47,7 +47,7 @@ class CountriesProcessor(ResultsProcessor):
 
 
 class DisciplinesProcessor(ResultsProcessor):
-    def __init__(self, meta_coverage, meta_coverage_processed_files="OCMeta_DOAJ_ErihPlus_merged.csv"):
+    def __init__(self, meta_coverage, meta_coverage_processed_files="SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"):
         super().__init__(meta_coverage, meta_coverage_processed_files)
 
 
@@ -81,7 +81,7 @@ class DisciplinesProcessor(ResultsProcessor):
     
 class CountsProcessor(ResultsProcessor):
 
-    def __init__(self, meta_df, export_path, meta_coverage_processed_files="OCMeta_DOAJ_ErihPlus_merged.csv"):
+    def __init__(self, meta_df, export_path, meta_coverage_processed_files="SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"):
         self.export_path = export_path
         super().__init__(meta_df, meta_coverage_processed_files)
 
