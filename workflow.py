@@ -18,14 +18,14 @@ def main(args):
     countries = CountriesProcessor(meta_coverage)
     countries_dict = countries.create_countries_dict() 
     countries_dict, no_country_venues = countries_dict
-    result_countries = CountsProcessor(meta_coverage, "/home/runner/work/test-workflow/test-workflow/countries.csv")
+    result_countries = CountsProcessor(meta_coverage, "/home/runner/work/2022-2023-playarists-code/2022-2023-playarists-code/countries.csv")
     result_countries = result_countries.counts(countries_dict, "Country")
     print("##### These venues have no country specified", no_country_venues) 
 
     print("##### Extracting Disciplines:")
     disciplines = DisciplinesProcessor(meta_coverage)
     disciplines_dict = disciplines.create_disciplines_dict()
-    result_disciplines = CountsProcessor(meta_coverage, "/home/runner/work/test-workflow/test-workflow/disciplines.csv")
+    result_disciplines = CountsProcessor(meta_coverage, "/home/runner/work/2022-2023-playarists-code/2022-2023-playarists-code/disciplines.csv")
     result_disciplines = result_disciplines.counts(disciplines_dict, "Discipline")
     
 if __name__ == '__main__':
@@ -33,9 +33,9 @@ if __name__ == '__main__':
 
     parser.add_argument("--batch_size", default=150, type=int, required=False, help="batch size: e.g. 100")
     parser.add_argument("--max_workers", default=4, type=int, required=False, help="max_workers: e.g. 4")
-    parser.add_argument("--oc_meta", default="/home/runner/work/test-workflow/test-workflow/csv_dump", type=str, required=False, help="path to the OpenCitations Meta dataset")
-    parser.add_argument("--erih_plus", default="/home/runner/work/test-workflow/test-workflow/ERIHPLUSapprovedJournals.csv", type=str, required=False, help="path to the ERIH PLUS dataset")
-    parser.add_argument("--doaj", default="/home/runner/work/test-workflow/test-workflow/journalcsv__doaj.csv", type=str, required=False, help="path to the DOAJ file")
+    parser.add_argument("--oc_meta", default="/home/runner/work/2022-2023-playarists-code/2022-2023-playarists-code/csv_dump", type=str, required=False, help="path to the OpenCitations Meta dataset")
+    parser.add_argument("--erih_plus", default="/home/runner/work/2022-2023-playarists-code/2022-2023-playarists-code/ERIHPLUSapprovedJournals.csv", type=str, required=False, help="path to the ERIH PLUS dataset")
+    parser.add_argument("--doaj", default="/home/runner/work/2022-2023-playarists-code/2022-2023-playarists-code/journalcsv__doaj.csv", type=str, required=False, help="path to the DOAJ file")
 
     args = parser.parse_args()
     args.oc_meta = args.oc_meta.path if isinstance(args.oc_meta, argparse.FileType) else args.oc_meta
