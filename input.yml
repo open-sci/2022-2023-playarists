@@ -1,6 +1,6 @@
 script:
   class: File
-  location: run_workflow.py
+  location: workflow.py
 oc_meta:
   class: Directory
   location: csv_dump/
