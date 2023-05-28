@@ -8,7 +8,7 @@ def process_meta_csv(chunk, erih_dict):
     publications_in_chunk = meta_data["id"].str.contains('doi').sum()
 
     meta_data['venue'] = meta_data['venue'].astype(str)
-    meta_data['issn_list'] = meta_data['venue'].str.findall(r' issn:(\d{4}-\d{3}[\dX])')
+    meta_data['issn_list'] = meta_data['venue'].str.findall(r' issn:(\d{4}-\d{3}[\dXx])')
     meta_data['OC_omid'] = meta_data['venue'].str.extract(r':br/([^\s]*)')
     issn_series = meta_data['issn_list'].drop_duplicates()
     index_to_keep = issn_series.index
