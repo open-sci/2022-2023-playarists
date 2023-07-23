@@ -25,16 +25,28 @@ python run_workflow.py
  
  
  ## Naming convention of Datasets 
- 
+
+For the sake of clarity, we have used some predefined labels to identify the main entities of our research: they will be introduced as they are split in each of the resulting CSV files.
+
+`SSH_Publications_in_OC_Meta_and_Open_Access_status.csv`:
 | OC_omid | issn | EP_id | Publications_in_venue | Open_Access |
 |---------|------|-------|-----------------------|-------------|
 
+Each publication venue is associated with its identifier [ISSN]. Items included in OpenCitations Meta and/or Erih-PLUS are also identified by their internal IDs [OC_omid] and/or [EP_id]. [Publications_in_venue] refers to the numbers of publications in each venue, while [Open_access] expresses whether the venue's Open Access status is True or Unknown.
+
+`SSH_Publications_by_Discipline.csv`:
 | Discipline | Journal_count | Publication_count | 
 |------------|---------------|-------------------|
 
-| Discipline | Journal_count | Publication_count | 
+Each discipline is associated with a label [Discipline] and the number of journals/publications referring to it: [Journal_count] and [Publication_count].
+
+`SSH_Publications_by_Discipline.csv`:
+| Country | Journal_count | Publication_count | 
 |------------|---------------|-------------------|
 
+Each country of publication is associated with its name [Country] and the number of journals/publications published ther: [Journal_count] and [Publication_count].
 
+
+## Extra
 * <a href="https://ghasempouri1984-2022-2023-playarists-code-streamlit-app-1aspl5.streamlit.app/">streamlit visualization of results</a>
 
