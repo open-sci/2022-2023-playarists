@@ -135,6 +135,7 @@ def viz8():
     plt.grid(axis="x", linewidth=0.2)
 
     st.pyplot(plt)
+
     
 # Streamlit code
 def main():
@@ -155,6 +156,7 @@ def main():
     viz7()
     st.header("Publications by Discipline")
     viz8()
+
 
 if __name__ == "__main__":
     main()
