@@ -8,9 +8,12 @@ from utils import load_data
 class ResultsProcessor(object):
     def __init__(self, meta_coverage, meta_coverage_processed_files): # takes in input a PlayaristProcessor object
         self.meta_coverage = meta_coverage
+        print("meta coverage without mega journals: \n")
+        print(self.meta_coverage[:10])
         self.meta_df = pd.read_csv(meta_coverage_processed_files)
         self.erih_df = meta_coverage.get_erih_df()
-        self.doaj_df = meta_coverage.get_doaj_df()     
+        self.doaj_df = meta_coverage.get_doaj_df()   
+
 
 
 class CountriesProcessor(ResultsProcessor):
@@ -158,15 +161,18 @@ class Compare_US_UK(ResultsProcessor):
 
         # DATASET US_DATA and UK_DATA 
         us_data = us_meta[["EP_id", "Publications_in_venue", "Original Title", "Country of Publication", "ERIH PLUS Disciplines", "disc_count"]]
+        us_data = us_data.rename(columns={"Original Title": "Original_Title", "Country of Publication": "Country_of_Publication", "ERIH PLUS Disciplines" : "ERIH_PLUS_Disciplines"})
         uk_data = uk_meta[["EP_id", "Publications_in_venue", "Original Title", "Country of Publication", "ERIH PLUS Disciplines", "disc_count"]]
+        uk_data = uk_data.rename(columns={"Original Title": "Original_Title", "Country of Publication": "Country_of_Publication", "ERIH PLUS Disciplines" : "ERIH_PLUS_Disciplines"})
+       
         us_data.to_csv("compareUS_UK/us_data.csv", index=False) #they are now 1161 (??) wierd
         uk_data.to_csv("compareUS_UK/uk_data.csv", index=False) #and 1350
 
         # DATASET META_COVERAGE_UK and META_COVERAGE_US
         meta_coverage_uk = uk_meta[["OC_omid", "issn", "EP_id", "Publications_in_venue", "Open Access"]]
         meta_coverage_us = us_meta[["OC_omid", "issn", "EP_id", "Publications_in_venue", "Open Access"]]
-        meta_coverage_uk.to_csv("compareUS_UK/meta_coverage_uk.csv", index=False) #they are now 1161 (??) wierd
-        meta_coverage_us.to_csv("compareUS_UK/meta_coverage_us.csv", index=False) #and 1350
+        meta_coverage_uk.to_csv("compareUS_UK/meta_coverage_uk.csv", index=False)
+        meta_coverage_us.to_csv("compareUS_UK/meta_coverage_us.csv", index=False) 
 
         return meta_coverage_us, meta_coverage_uk, us_data, uk_data
 
@@ -196,7 +202,4 @@ class Compare_US_UK(ResultsProcessor):
         # how can we check that the result is correct?
 
         return count_df
-
-
-
 

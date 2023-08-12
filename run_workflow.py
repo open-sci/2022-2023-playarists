@@ -18,14 +18,14 @@ def main(args):
     countries = CountriesProcessor(meta_coverage)
     countries_dict = countries.create_countries_dict() 
     countries_dict, no_country_venues = countries_dict
-    result_countries = CountsProcessor(meta_coverage, "SSH_Publications_and_Journals_by_Country.csv")
+    result_countries = CountsProcessor(meta_coverage, "results/SSH_Publications_and_Journals_by_Country.csv")
     result_countries = result_countries.counts(countries_dict, "Country")
     print("##### These venues have no country specified", no_country_venues) 
 
     print("##### Extracting Disciplines:")
     disciplines = DisciplinesProcessor(meta_coverage)
     disciplines_dict = disciplines.create_disciplines_dict()
-    result_disciplines = CountsProcessor(meta_coverage, "SSH_Publications_by_Discipline.csv")
+    result_disciplines = CountsProcessor(meta_coverage, "results/SSH_Publications_by_Discipline.csv")
     result_disciplines = result_disciplines.counts(disciplines_dict, "Discipline")
     
     print("##### Comparing UK and US:")

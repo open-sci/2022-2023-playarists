@@ -69,7 +69,23 @@ class PlayaristsProcessor(Processor):
 
         #this is meta-erih-doaj merged
         new_final_df = process_doaj_file(self.doaj_df, final_df)
-        new_final_df.to_csv("SSH_Publications_in_OC_Meta_and_Open_Access_status.csv")
+        
+        #fixing doouble entries by summing publications_in_venue values and unifying on EP_id (11/08) 
+        right_pub_count = new_final_df.groupby(by='EP_id')['Publications_in_venue'].sum()
+        double_ep_list = list(new_final_df.duplicated(subset="EP_id", keep=False)) # create boolean list where all duplicates are true, store it in a list
+        new_final_df["doubles"] = double_ep_list# set the list as a new column of df
+        double_omid = new_final_df.query("doubles == 'True'") #create new df with only double omids
+        double_omid = double_omid[["OC_omid", "issn"]] # new df with info of duplicates
+        double_omid.to_csv("results/duplicate_omids.csv") # save as csv
+        new_final_df = new_final_df.drop_duplicates(subset="EP_id")
+        new_final_df = pd.merge(right_pub_count, new_final_df, left_on="EP_id", right_on="EP_id", how="left")
+        new_final_df = new_final_df.sort_values("Publications_in_venue_x", ascending=False)
+        new_final_df = new_final_df.drop(columns=["Publications_in_venue_y", "doubles"])
+        new_final_df = new_final_df.rename(columns={"Publications_in_venue_x": "Publications_in_venue"})
+        print("len new final df \n") 
+        print(len(new_final_df)) # should be 8583
+        
+        new_final_df.to_csv("results/SSH_Publications_in_OC_Meta_and_Open_Access_status.csv")
         
         publications_coverage_count = new_final_df.shape[0]
         OCMeta_coverage = publications_coverage_count / totalOCMpublications
