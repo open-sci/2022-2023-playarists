@@ -6,19 +6,19 @@ from utils import load_data
 # ==================== PROCESSORS FOR RETRIEVING DISCIPLINES ======================= #
 
 class ResultsProcessor(object):
-    def __init__(self, meta_coverage, meta_coverage_processed_files): # takes in input a PlayaristProcessor object
+    def __init__(self, meta_coverage, remove_megajournals, meta_coverage_processed_files): # takes in input a PlayaristProcessor object
         self.meta_coverage = meta_coverage
-        print("meta coverage without mega journals: \n")
-        print(self.meta_coverage[:10])
-        self.meta_df = pd.read_csv(meta_coverage_processed_files)
+        self.meta_df = pd.read_csv(meta_coverage_processed_files).iloc[4:] if remove_megajournals else pd.read_csv(meta_coverage_processed_files)
         self.erih_df = meta_coverage.get_erih_df()
         self.doaj_df = meta_coverage.get_doaj_df()   
+        self.remove_megajournals = remove_megajournals
+        
 
 
 
 class CountriesProcessor(ResultsProcessor):
-    def __init__(self, meta_coverage, meta_coverage_processed_files="SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"): 
-        super().__init__(meta_coverage, meta_coverage_processed_files)
+    def __init__(self, meta_coverage, remove_megajournals=False, meta_coverage_processed_files="SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"): 
+        super().__init__(meta_coverage, remove_megajournals, meta_coverage_processed_files)
         self.doaj_df = self.doaj_df[["Journal ISSN (print version)", "Journal EISSN (online version)", "Country of publisher"]] 
         self.unmatched_countries = []
 
@@ -52,8 +52,8 @@ class CountriesProcessor(ResultsProcessor):
 
 
 class DisciplinesProcessor(ResultsProcessor):
-    def __init__(self, meta_coverage, meta_coverage_processed_files="SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"):
-        super().__init__(meta_coverage, meta_coverage_processed_files)
+    def __init__(self, meta_coverage, remove_megajournals=False, meta_coverage_processed_files="SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"):
+        super().__init__(meta_coverage, remove_megajournals, meta_coverage_processed_files)
 
 
     def create_disciplines_dict(self): 
@@ -86,9 +86,9 @@ class DisciplinesProcessor(ResultsProcessor):
     
 class CountsProcessor(ResultsProcessor):
 
-    def __init__(self, meta_df, export_path, meta_coverage_processed_files="SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"):
+    def __init__(self, meta_df, export_path, remove_megajournals=False, meta_coverage_processed_files="SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"):
         self.export_path = export_path
-        super().__init__(meta_df, meta_coverage_processed_files)
+        super().__init__(meta_df, remove_megajournals, meta_coverage_processed_files)
 
 
     def counts(self, dictionary, label): #dictionary is a DisciplinesCountriesProcessor object
@@ -112,14 +112,14 @@ class CountsProcessor(ResultsProcessor):
 
         return count_df
 
-# ==================== US-UK comparison ====================== #
+# ==================== US-EU comparison ====================== #
 
-class Compare_US_UK(ResultsProcessor):
-    def __init__(self, meta_coverage, meta_coverage_processed_files="SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"): 
-        super().__init__(meta_coverage, meta_coverage_processed_files)
+class Compare_US_EU(ResultsProcessor):
+    def __init__(self, meta_coverage, remove_megajournals=False,  meta_coverage_processed_files="SSH_Publications_in_OC_Meta_and_Open_Access_status.csv"): 
+        super().__init__(meta_coverage, remove_megajournals, meta_coverage_processed_files)
    
     
-    def compare_us_uk(self, erih_ds, countries_dict):
+    def compare_us_eu(self, erih_ds, countries_dict):
         # loading data 
         erih = load_data(erih_ds)
         countries_j = countries_dict
@@ -129,9 +129,15 @@ class Compare_US_UK(ResultsProcessor):
         #with open(disciplines_dict) as f:
             #disciplines_j = json.load(f)
 
-        # filtering for UK journals
-        uk_ID = list(countries_j["United Kingdom"])
-        uk_info = erih[erih["Journal ID"].isin(uk_ID)] # 1348 rows vs 1350 of results? but I have the previous ds here I think
+        # filtering for EU journals
+        eu_ID = []
+        eu_contries = ["Spain", "Romania", "Sweden", "United Kingdom", "Bulgaria", "Italy", "France", "Belgium", "Greece", "Poland", "Slovenia", "Albania", "Czechia", "Serbia", "Ukraine", "Netherlands", "Hungary", "Germany", "Italy, Norway", "Portugal", "Estonia", "Norway", "Bosnia and Herzegovina", "Slovakia", "Macedonia", "Lithuania", "Denmark", "Latvia", "Switzerland", "Finland", "United Kingdom", "Montenegro", "Ireland", "Croatia", "Austria", "Moldova", "Cyprus", "Germany, United Kingdom", "Czechia, Finland", "United Kingdom, Netherlands", "Luxembourg", "Iceland", "United Kingdom, Norway", "Malta", "Switzerland, United Kingdom", "Spain, United Kingdom", "Germany, Italy", "Belarus"]
+        for country in countries_j:
+            if country in eu_contries:
+                eu_ID.extend(list(countries_j[country]))
+
+
+        eu_info = erih[erih["Journal ID"].isin(eu_ID)]
 
         # filtering for US journals
         us_ID = list(countries_j["United States"])
@@ -150,37 +156,37 @@ class Compare_US_UK(ResultsProcessor):
             return df
 
         us = count_disciplines_per_journal(us_info)
-        uk = count_disciplines_per_journal(uk_info)
+        eu = count_disciplines_per_journal(eu_info)
 
 
-        # now filter SSH_Publications_in_OC_Meta_and_Open_Access_status.csv to uk and us erih info
+        # now filter SSH_Publications_in_OC_Meta_and_Open_Access_status.csv to eu and us erih info
         meta_processed = self.meta_df
 
         us_meta = pd.merge(meta_processed, us, left_on="EP_id", right_on="Journal ID", how="inner") # keep only those present in meta
-        uk_meta = pd.merge(meta_processed, uk, left_on="EP_id", right_on="Journal ID", how="inner")
+        eu_meta = pd.merge(meta_processed, eu, left_on="EP_id", right_on="Journal ID", how="inner")
 
-        # DATASET US_DATA and UK_DATA 
+        # DATASET US_DATA and EU_DATA 
         us_data = us_meta[["EP_id", "Publications_in_venue", "Original Title", "Country of Publication", "ERIH PLUS Disciplines", "disc_count"]]
         us_data = us_data.rename(columns={"Original Title": "Original_Title", "Country of Publication": "Country_of_Publication", "ERIH PLUS Disciplines" : "ERIH_PLUS_Disciplines"})
-        uk_data = uk_meta[["EP_id", "Publications_in_venue", "Original Title", "Country of Publication", "ERIH PLUS Disciplines", "disc_count"]]
-        uk_data = uk_data.rename(columns={"Original Title": "Original_Title", "Country of Publication": "Country_of_Publication", "ERIH PLUS Disciplines" : "ERIH_PLUS_Disciplines"})
+        eu_data = eu_meta[["EP_id", "Publications_in_venue", "Original Title", "Country of Publication", "ERIH PLUS Disciplines", "disc_count"]]
+        eu_data = eu_data.rename(columns={"Original Title": "Original_Title", "Country of Publication": "Country_of_Publication", "ERIH PLUS Disciplines" : "ERIH_PLUS_Disciplines"})
        
-        us_data.to_csv("compareUS_UK/us_data.csv", index=False) #they are now 1161 (??) wierd
-        uk_data.to_csv("compareUS_UK/uk_data.csv", index=False) #and 1350
+        us_data.to_csv("compareUS_EU/us_data.csv", index=False) #they are now 1161 (??) wierd
+        eu_data.to_csv("compareUS_EU/eu_data.csv", index=False) #and 1350
 
-        # DATASET META_COVERAGE_UK and META_COVERAGE_US
-        meta_coverage_uk = uk_meta[["OC_omid", "issn", "EP_id", "Publications_in_venue", "Open Access"]]
+        # DATASET META_COVERAGE_EU and META_COVERAGE_US
+        meta_coverage_eu = eu_meta[["OC_omid", "issn", "EP_id", "Publications_in_venue", "Open Access"]]
         meta_coverage_us = us_meta[["OC_omid", "issn", "EP_id", "Publications_in_venue", "Open Access"]]
-        meta_coverage_uk.to_csv("compareUS_UK/meta_coverage_uk.csv", index=False)
-        meta_coverage_us.to_csv("compareUS_UK/meta_coverage_us.csv", index=False) 
+        meta_coverage_eu.to_csv("compareUS_EU/meta_coverage_eu.csv", index=False)
+        meta_coverage_us.to_csv("compareUS_EU/meta_coverage_us.csv", index=False) 
 
-        return meta_coverage_us, meta_coverage_uk, us_data, uk_data
+        return meta_coverage_us, meta_coverage_eu, us_data, eu_data
 
 
     # RESULT DATASET WITH PUBLICATIONS AND JOURNALS PER DISCIPLINE
 
-    def counts_us_uk(self, disciplines_dict, label, meta_coverage_us_or_uk, export_path): 
-        meta_coverage = meta_coverage_us_or_uk
+    def counts_us_eu(self, disciplines_dict, label, meta_coverage_us_or_eu, export_path): 
+        meta_coverage = meta_coverage_us_or_eu
         count_df = pd.DataFrame(columns=[str(label),'Journal_count','Publication_count'])
     
         for key, value in disciplines_dict.items():
@@ -202,4 +208,3 @@ class Compare_US_UK(ResultsProcessor):
         # how can we check that the result is correct?
 
         return count_df
-

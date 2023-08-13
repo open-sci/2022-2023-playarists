@@ -74,7 +74,7 @@ class PlayaristsProcessor(Processor):
         right_pub_count = new_final_df.groupby(by='EP_id')['Publications_in_venue'].sum()
         double_ep_list = list(new_final_df.duplicated(subset="EP_id", keep=False)) # create boolean list where all duplicates are true, store it in a list
         new_final_df["doubles"] = double_ep_list# set the list as a new column of df
-        double_omid = new_final_df.query("doubles == 'True'") #create new df with only double omids
+        double_omid = new_final_df.query("doubles == True") #create new df with only double omids
         double_omid = double_omid[["OC_omid", "issn"]] # new df with info of duplicates
         double_omid.to_csv("results/duplicate_omids.csv") # save as csv
         new_final_df = new_final_df.drop_duplicates(subset="EP_id")
@@ -97,4 +97,3 @@ class PlayaristsProcessor(Processor):
 
 
              
-
