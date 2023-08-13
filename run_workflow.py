@@ -20,6 +20,10 @@ def main(args):
     countries_dict, no_country_venues = countries_dict
     result_countries = CountsProcessor(meta_coverage, "SSH_Publications_and_Journals_by_Country.csv", args.remove_megajournals,)
     result_countries = result_countries.counts(countries_dict, "Country")
+    # save dictionary to json
+    save_countries_dict = open("result_countries.json", "w")  
+    json.dump(countries_dict, save_countries_dict, indent = 6)  
+    save_countries_dict.close()  
     print("##### These venues have no country specified", no_country_venues) 
 
     print("##### Extracting Disciplines:")
@@ -27,6 +31,10 @@ def main(args):
     disciplines_dict = disciplines.create_disciplines_dict()
     result_disciplines = CountsProcessor(meta_coverage, "SSH_Publications_by_Discipline.csv", args.remove_megajournals)
     result_disciplines = result_disciplines.counts(disciplines_dict, "Discipline")
+    # save dictionary to json
+    save_disciplines_dict = open("result_disciplines.json", "w")  
+    json.dump(disciplines_dict, save_disciplines_dict, indent = 6)  
+    save_disciplines_dict.close()  
     
     print("##### Comparing EU and US:")
     us_eu = Compare_US_EU(meta_coverage, args.remove_megajournals)
@@ -41,9 +49,9 @@ if __name__ == '__main__':
 
     parser.add_argument("--batch_size", default=150, type=int, required=False, help="batch size: e.g. 100")
     parser.add_argument("--max_workers", default=4, type=int, required=False, help="max_workers: e.g. 4")
-    parser.add_argument("--oc_meta", default="C:\\Users\\sebas\\Downloads\\csv\\csv_dump_oroci", type=str, required=False, help="path to the OpenCitations Meta dataset")
-    parser.add_argument("--erih_plus", default="ERIHPLUSapprovedJournals.csv", type=str, required=False, help="path to the ERIH PLUS dataset")
-    parser.add_argument("--doaj", default="journalcsv__doaj.csv", type=str, required=False, help="path to the DOAJ file")
+    parser.add_argument("--oc_meta", default="F:\DATAvarie\csv\csv_dump", type=str, required=False, help="path to the OpenCitations Meta dataset")
+    parser.add_argument("--erih_plus", default="ds\ERIHPLUSapprovedJournals.csv", type=str, required=False, help="path to the ERIH PLUS dataset")
+    parser.add_argument("--doaj", default="ds\journalcsv__doaj_20230528_0035_utf8.csv", type=str, required=False, help="path to the DOAJ file")
     parser.add_argument("--remove_megajournals", default=True, type=bool, required=False, help="exclude mega journals from analysis")
 
     args = parser.parse_args()

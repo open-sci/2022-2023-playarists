@@ -1,5 +1,6 @@
 import csv
 import pandas as pd
+import os
 
 def detect_delimiter(file_path):
     with open(file_path, 'r', newline='', encoding='utf-8') as file:
@@ -46,3 +47,13 @@ def process_doaj_file(doaj_df, merged_data):  #this is called in oc metaprocesso
                 merged_data.at[idx, 'Open Access'] = True
 
     return merged_data
+
+def save_to_results(df, filename):
+
+    outdir = './results/'
+    if not os.path.exists(outdir):
+        os.mkdir(outdir)
+        
+    fullname = os.path.join(outdir, filename)    
+        
+    df.to_csv(fullname, index= False)

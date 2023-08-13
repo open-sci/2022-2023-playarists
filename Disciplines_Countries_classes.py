@@ -1,7 +1,7 @@
 import pandas as pd
 from retrieve_doaj_country import retrieve_doaj_country
 import json
-from utils import load_data
+from utils import load_data, save_to_results
 
 # ==================== PROCESSORS FOR RETRIEVING DISCIPLINES ======================= #
 
@@ -48,6 +48,7 @@ class CountriesProcessor(ResultsProcessor):
                             countr_dict[key].append(row["Journal ID"])
 
         complete_country_dict = retrieve_doaj_country(self.unmatched_countries, merged_df, self.doaj_df, countr_dict)
+
         return complete_country_dict # a tuple (countr_dict, unmatched_df)                
 
 
@@ -78,7 +79,7 @@ class DisciplinesProcessor(ResultsProcessor):
                     disc_dict.update({key: [] for key in diff})            
                     for key in disciplines:
                         disc_dict[key].append(row["Journal ID"])
-
+        
         return disc_dict
     
     
@@ -108,7 +109,7 @@ class CountsProcessor(ResultsProcessor):
             count_df = pd.concat([count_df, new_row], ignore_index = True)
         
         count_df = count_df.sort_values('Publication_count', ascending=False)        
-        count_df.to_csv(self.export_path, index=False)
+        save_to_results(count_df, self.export_path)
 
         return count_df
 
@@ -171,14 +172,14 @@ class Compare_US_EU(ResultsProcessor):
         eu_data = eu_meta[["EP_id", "Publications_in_venue", "Original Title", "Country of Publication", "ERIH PLUS Disciplines", "disc_count"]]
         eu_data = eu_data.rename(columns={"Original Title": "Original_Title", "Country of Publication": "Country_of_Publication", "ERIH PLUS Disciplines" : "ERIH_PLUS_Disciplines"})
        
-        us_data.to_csv("compareUS_EU/us_data.csv", index=False) #they are now 1161 (??) wierd
-        eu_data.to_csv("compareUS_EU/eu_data.csv", index=False) #and 1350
+        save_to_results(us_data, "compareUS_EU/us_data.csv") 
+        save_to_results(eu_data, "compareUS_EU/eu_data.csv") 
 
         # DATASET META_COVERAGE_EU and META_COVERAGE_US
         meta_coverage_eu = eu_meta[["OC_omid", "issn", "EP_id", "Publications_in_venue", "Open Access"]]
         meta_coverage_us = us_meta[["OC_omid", "issn", "EP_id", "Publications_in_venue", "Open Access"]]
-        meta_coverage_eu.to_csv("compareUS_EU/meta_coverage_eu.csv", index=False)
-        meta_coverage_us.to_csv("compareUS_EU/meta_coverage_us.csv", index=False) 
+        save_to_results(meta_coverage_eu, "compareUS_EU/meta_coverage_eu.csv")
+        save_to_results(meta_coverage_us, "compareUS_EU/meta_coverage_us.csv") 
 
         return meta_coverage_us, meta_coverage_eu, us_data, eu_data
 
@@ -202,7 +203,7 @@ class Compare_US_EU(ResultsProcessor):
             count_df = pd.concat([count_df, new_row], ignore_index = True)
         
         count_df = count_df.sort_values('Publication_count', ascending=False)        
-        count_df.to_csv(export_path, index=False)
+        save_to_results(count_df, export_path)
 
         # since in this df a single publication and journal counts multiple times for each discipline,
         # how can we check that the result is correct?
