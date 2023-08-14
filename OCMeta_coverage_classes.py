@@ -87,8 +87,8 @@ class PlayaristsProcessor(Processor):
         
         save_to_results(new_final_df, "SSH_Publications_in_OC_Meta_and_Open_Access_status.csv")
         
-        publications_coverage_count = new_final_df.shape[0]
-        OCMeta_coverage = publications_coverage_count / totalOCMpublications
+        publications = new_final_df['Publications_in_venue'].sum()
+        OCMeta_coverage = publications / totalOCMpublications
         OCMeta_coverage_percent = OCMeta_coverage * 100
         print("##### OpenCitations Meta publications in ERIH PLUS: count = ", str(totalOCMpublications), "; ratio = ", str(OCMeta_coverage), "; % = ", str(OCMeta_coverage_percent))
 
