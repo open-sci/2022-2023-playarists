@@ -67,12 +67,12 @@ the correlation between Publications_in_venue and the number of disciplines is v
 
 - <b>us_disciplines_count</b>: contains the count of US Journals and theit Publications for each Discipline
 
-Disciplines | Journal_count | Publication_count
+Discipline | Journal_count | Publication_count
 ---------|---------------------|--------------
 
 - <b>eu_disciplines_count</b>: contains the count of UK Journals and theit Publications for each Discipline
 
-Disciplines | Journal_count | Publication_count
+Discipline | Journal_count | Publication_count
 ---------|---------------------|--------------
 
 ## Extra
