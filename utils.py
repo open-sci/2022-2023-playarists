@@ -55,6 +55,7 @@ def save_to_results(df, filename):
         os.mkdir(outdir)
         
     #fullname = os.path.join(outdir, filename)
-    fullname = os.path.join('./results/', filename)
+    #fullname = os.path.join('./results/', filename)
+    fullname = os.path.join(outdir, os.path.basename(filename))
         
     df.to_csv(fullname, index= False)
