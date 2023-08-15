@@ -49,11 +49,12 @@ def process_doaj_file(doaj_df, merged_data):  #this is called in oc metaprocesso
     return merged_data
 
 def save_to_results(df, filename):
-
-    outdir = './results/'
+    outdir = os.path.join('./results/', os.path.dirname(filename))
+    #outdir = './results/'
     if not os.path.exists(outdir):
         os.mkdir(outdir)
         
-    fullname = os.path.join(outdir, filename)    
+    #fullname = os.path.join(outdir, filename)
+    fullname = os.path.join('./results/', filename)
         
     df.to_csv(fullname, index= False)
