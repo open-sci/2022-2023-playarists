@@ -49,10 +49,10 @@ if __name__ == '__main__':
 
     parser.add_argument("--batch_size", default=150, type=int, required=False, help="batch size: e.g. 100")
     parser.add_argument("--max_workers", default=4, type=int, required=False, help="max_workers: e.g. 4")
-    parser.add_argument("--oc_meta", default="F:\DATAvarie\csv\csv_dump", type=str, required=False, help="path to the OpenCitations Meta dataset")
-    parser.add_argument("--erih_plus", default="ds\ERIHPLUSapprovedJournals.csv", type=str, required=False, help="path to the ERIH PLUS dataset")
-    parser.add_argument("--doaj", default="ds\journalcsv__doaj_20230528_0035_utf8.csv", type=str, required=False, help="path to the DOAJ file")
-    parser.add_argument("--remove_megajournals", default=True, type=bool, required=False, help="exclude mega journals from analysis")
+    parser.add_argument("--oc_meta", default="csv_dump", type=str, required=False, help="path to the OpenCitations Meta dataset")
+    parser.add_argument("--erih_plus", default="ERIHPLUSapprovedJournals.csv", type=str, required=False, help="path to the ERIH PLUS dataset")
+    parser.add_argument("--doaj", default="journalcsv__doaj_20230528_0035_utf8.csv", type=str, required=False, help="path to the DOAJ file")
+    parser.add_argument("--remove_megajournals", default=False, type=bool, required=False, help="exclude mega journals from analysis")
 
     args = parser.parse_args()
     main(args)
