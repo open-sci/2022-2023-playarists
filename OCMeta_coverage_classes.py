@@ -92,6 +92,9 @@ class PlayaristsProcessor(Processor):
         OCMeta_coverage_percent = OCMeta_coverage * 100
         print("##### OpenCitations Meta publications in ERIH PLUS: count = ", str(totalOCMpublications), "; ratio = ", str(OCMeta_coverage), "; % = ", str(OCMeta_coverage_percent))
 
+        # SSH journals Open Access Status
+        access_counts = new_final_df['Open Access'].value_counts()
+        print("##### SSH journals Open Access Status: count = ", access_counts)
         return new_final_df   
 
 
