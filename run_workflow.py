@@ -38,7 +38,7 @@ def main(args):
     
     print("##### Comparing EU and US:")
     us_eu = Compare_US_EU(meta_coverage, args.remove_megajournals)
-    meta_coverage_us_eu= us_eu.compare_us_eu("ERIHPLUSapprovedJournals.csv", countries_dict) #returns a tuple with the two datasets
+    meta_coverage_us_eu= us_eu.compare_us_eu("ds\ERIHPLUSapprovedJournals.csv", countries_dict) #returns a tuple with the two datasets
     meta_coverage_us, meta_coverage_eu, us_data, eu_data = meta_coverage_us_eu
     us_eu.counts_us_eu(disciplines_dict, "Discipline", meta_coverage_us, "compareUS_EU/us_disciplines_count.csv")
     us_eu.counts_us_eu(disciplines_dict, "Discipline", meta_coverage_eu, "compareUS_EU/eu_disciplines_count.csv")
