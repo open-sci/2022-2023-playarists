@@ -94,7 +94,8 @@ class PlayaristsProcessor(Processor):
 
         # SSH journals Open Access Status
         access_counts = new_final_df['Open Access'].value_counts()
-        print("##### SSH journals Open Access Status: count = ", access_counts)
+        percentages = (access_counts / len(new_final_df['Open Access'])) * 100
+        print("##### SSH journals Open Access Status : counts ", str(access_counts), "; pecentage = ", str(percentages))
         return new_final_df   
 
 
