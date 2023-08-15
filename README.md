@@ -46,6 +46,34 @@ Each discipline is associated with a label [Discipline] and the number of journa
 
 Each country of publication is associated with its name [Country] and the number of journals/publications published ther: [Journal_count] and [Publication_count].
 
+Besides, the resulting csv will also be produced by running the software:
+
+- <b>meta_coverage_us</b>: The dataset SSH_Publications_in_OC_Meta_and_Open_Access_status.csv filtered to contain only US Journals
+- <b>meta_coverage_eu</b>: The dataset SSH_Publications_in_OC_Meta_and_Open_Access_status.csv filtered to contain only US Journals
+
+- <b>us_data</b>: For US Journals covered in OCMeta, contains<br>
+
+EP_id | Publications_in_venue | Original Title | Country of Publication | ERIH PLUS Disciplines | disc_count
+---------|---------------------|--------------|----------------------|---------------------|------------
+
+the correlation between Publications_in_venue and the number of disciplines is visualized in the scatterplot "scatter_correlation_ndisc_npub_US"
+
+- <b>eu_data</b>:  For UK Journals covered in OCMeta, contains<br>
+
+EP_id | Publications_in_venue | Original Title | Country of Publication | ERIH PLUS Disciplines | disc_count
+---------|---------------------|--------------|----------------------|---------------------|------------
+
+the correlation between Publications_in_venue and the number of disciplines is visualized in the scatterplot "scatter_correlation_ndisc_npub_UK"
+
+- <b>us_disciplines_count</b>: contains the count of US Journals and theit Publications for each Discipline
+
+Disciplines | Journal_count | Publication_count
+---------|---------------------|--------------
+
+- <b>eu_disciplines_count</b>: contains the count of UK Journals and theit Publications for each Discipline
+
+Disciplines | Journal_count | Publication_count
+---------|---------------------|--------------
 
 ## Extra
 * <a href="https://ghasempouri1984-2022-2023-playarists-code-streamlit-app-1aspl5.streamlit.app/">streamlit visualization of results</a>
