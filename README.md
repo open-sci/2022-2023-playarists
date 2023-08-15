@@ -3,7 +3,7 @@
 
 ## Source data
 
-* <a href="https://kanalregister.hkdir.no/publiseringskanaler/erihplus/periodical/listApproved">OpenCitations Meta dump</a> (downloaded 24/02/2023) 
+* <a href="https://figshare.com/articles/dataset/OpenCitations_Meta_CSV_dataset_of_all_bibliographic_metadata/21747461/3">OpenCitations Meta dump version 3</a> (downloaded 24/02/2023) 
 * <a href="https://kanalregister.hkdir.no/publiseringskanaler/erihplus/periodical/listApproved">ERIH PLUS approved Journals</a> (downloaded 27/04/2023)
 * <a href="https://doaj.org/docs/public-data-dump/">DOAJ public dump</a> (downloaded 06/05/2923)
  
