@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/627426136.svg)](https://zenodo.org/badge/latestdoi/627426136)
+
 # 2022-2023-Playarist Software
  The repository for the team Playarists of the Open Science course a.a. 2022/2023
 
