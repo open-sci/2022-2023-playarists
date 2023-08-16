@@ -176,8 +176,8 @@ class Compare_US_EU(ResultsProcessor):
         save_to_results(eu_data, "compareUS_EU/eu_data.csv") 
 
         # DATASET META_COVERAGE_EU and META_COVERAGE_US
-        meta_coverage_eu = eu_meta[["OC_omid", "issn", "EP_id", "Publications_in_venue", "Open Access"]]
-        meta_coverage_us = us_meta[["OC_omid", "issn", "EP_id", "Publications_in_venue", "Open Access"]]
+        meta_coverage_eu = eu_meta[["OC_omid", "issn", "EP_id", "Publications_in_venue", "Open_Access"]]
+        meta_coverage_us = us_meta[["OC_omid", "issn", "EP_id", "Publications_in_venue", "Open_Access"]]
         save_to_results(meta_coverage_eu, "compareUS_EU/meta_coverage_eu.csv")
         save_to_results(meta_coverage_us, "compareUS_EU/meta_coverage_us.csv") 
 
