@@ -93,7 +93,7 @@ class PlayaristsProcessor(Processor):
         print("##### OpenCitations Meta publications in ERIH PLUS: count = ", str(totalOCMpublications), "; ratio = ", str(OCMeta_coverage), "; % = ", str(OCMeta_coverage_percent))
 
         # SSH journals Open Access Status
-        df_true_values = new_final_df.query("Open_Access == 'True'") 
+        df_true_values = new_final_df.query("Open_Access == True") 
         access_count = len(df_true_values)
         percentages = (access_count * 100) / len(new_final_df)
         print("##### SSH journals Open Access Status : counts ", str(access_count), "; pecentage = ", str(percentages))
